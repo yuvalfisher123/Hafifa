@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  frontend:
+    image: frontend-search
+    container_name: frontend
+    ports:
+      - 3000:3000
+    networks:
+      - search-network
+    links:
+      - backend
+  
+  backend:
+    image: backend-search
+    container_name: backend
+    ports:
+      - 8000:8000
+    networks:
+      - search-network
+    environment:
+      - "API_HOST=http://api:5000"
+    links:
+      - api
+
+  api:
+    image: api-search
+    container_name: api
+    ports:
+      - 5000:5000
+    networks:
+      - search-network
+    environment:
+      - "DATABASE_PATH=postgresql+psycopg2://postgres:postgres@172.17.0.1:5432/postgres"        
+
+networks:
+  search-network: 
+    
